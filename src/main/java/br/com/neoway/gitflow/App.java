@@ -19,6 +19,9 @@ import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.pdf.PDFParser;
 import org.apache.tika.sax.BodyContentHandler;
+import org.jsoup.Jsoup;
+import org.jsoup.select.Elements;
+import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
@@ -31,6 +34,7 @@ public class App
     {
     	Bot.firstMethod();
 //    	testeParse();
+    	testeHtmlParse();
     	 InputStream is = null;
     	    try {
     	      is = new FileInputStream("/home/neoway/Downloads/teste.pdf");
@@ -51,6 +55,18 @@ public class App
     	    finally {
     	        if (is != null) is.close();
     	    }
+    }
+    
+    private static void testeHtmlParse(){
+    	org.jsoup.nodes.Document doc;
+		try {
+			doc = Jsoup.connect("http://en.wikipedia.org/").get();
+			Elements newsHeadlines = doc.select("#mp-itn b a");
+			System.out.println("teste");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
     
     private static void testeParse(){
