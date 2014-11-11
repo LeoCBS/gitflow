@@ -20,8 +20,9 @@ import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.pdf.PDFParser;
 import org.apache.tika.sax.BodyContentHandler;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
@@ -35,38 +36,47 @@ public class App
     	Bot.firstMethod();
 //    	testeParse();
     	testeHtmlParse();
-    	 InputStream is = null;
-    	    try {
-    	      is = new FileInputStream("/home/neoway/Downloads/teste.pdf");
-    	      BodyContentHandler contenthandler = new BodyContentHandler();
-    	      Metadata metadata = new Metadata();
-    	      PDFParser pdfparser = new PDFParser();
-    	      pdfparser.parse(is, contenthandler, metadata, new ParseContext());
-    	      String retorno = contenthandler.toString();
-    	      Pattern pattern = Pattern.compile("[a-z]");
-    	      Matcher matcher = pattern.matcher(retorno);
-    	      matcher.find();
-    	      System.out.println(matcher.group());
-    	      System.out.println(contenthandler.toString());
-    	    }
-    	    catch (Exception e) {
-    	      e.printStackTrace();
-    	    }
-    	    finally {
-    	        if (is != null) is.close();
-    	    }
+//    	 InputStream is = null;
+//    	    try {
+//    	      is = new FileInputStream("/home/neoway/Downloads/teste.pdf");
+//    	      BodyContentHandler contenthandler = new BodyContentHandler();
+//    	      Metadata metadata = new Metadata();
+//    	      PDFParser pdfparser = new PDFParser();
+//    	      pdfparser.parse(is, contenthandler, metadata, new ParseContext());
+//    	      String retorno = contenthandler.toString();
+//    	      Pattern pattern = Pattern.compile("[a-z]");
+//    	      Matcher matcher = pattern.matcher(retorno);
+//    	      matcher.find();
+//    	      System.out.println(matcher.group());
+//    	      System.out.println(contenthandler.toString());
+//    	    }
+//    	    catch (Exception e) {
+//    	      e.printStackTrace();
+//    	    }
+//    	    finally {
+//    	        if (is != null) is.close();
+//    	    }
     }
     
     private static void testeHtmlParse(){
-    	org.jsoup.nodes.Document doc;
-		try {
-			doc = Jsoup.connect("http://en.wikipedia.org/").get();
-			Elements newsHeadlines = doc.select("#mp-itn b a");
-			System.out.println("teste");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+    	Document doc;
+        try{
+            doc =        Jsoup.connect("https://www.google.com.br/search?client=ubuntu&channel=fs&q=search+google+json&ie=utf-8&oe=utf-8&gfe_rd=cr&ei=6OhhVLihL4qX8Qea2IGoAg").userAgent("Mozilla").ignoreHttpErrors(true).timeout(0).get();
+            Elements links = doc.select("li[class=g]");
+            for (Element link : links) {
+                Elements titles = link.select("h3[class=r]");
+                String title = titles.text();
+
+                Elements bodies = link.select("span[class=st]");
+                String body = bodies.text();
+
+                System.out.println("Title: "+title);
+                System.out.println("Body: "+body+"\n");
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     
     private static void testeParse(){
